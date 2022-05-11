@@ -3,26 +3,42 @@ $(function(){
     const URI = '/api/operations';
     
 var operationsarray =[];
+let total=0;
   // GET OPERATIONS
   $('#refreshOperations').on('click', () => {
     $.ajax({
       url: URI,
       success: function (products) {
         operationsarray = products;
-        loadtable(-10);
+        updateValues(-10);
     }
     });
   });
 //LOAD TABLE
+function calculartotal(){
+  operationsarray.forEach(operationsarray=>{
+    if (operationsarray.Tipo == "Ingreso")
+      total += operationsarray.Monto;
+    else
+      total -= operationsarray.Monto;
 
+    
+  }) 
+  $('h3').text("$"+total)
+}
+function updateValues(max){
+  loadtable(max);
+  calculartotal();
+}
 function loadtable(max){
         let tbody = $('tbody');
         tbody.html('');
-        operationsarray.slice(max).forEach(operationsarray => {
+        var vg;
+        operationsarray.slice(max).reverse().forEach(operationsarray => {
             if (operationsarray.Tipo == "Ingreso")
-                var bg = "p-3 mb-2 bg-success text-white";
+              bg = "p-3 mb-2 bg-success text-white";
             else
-                var bg = "p-3 mb-2 bg-danger text-white";
+              bg = "p-3 mb-2 bg-danger text-white";
             tbody.append(`
                 <tr class = "${bg}">
                     <td class="id">${operationsarray.Id}</td>
@@ -40,7 +56,7 @@ function loadtable(max){
 }
 
   // POST OPERATIONS
-  $('#productForm').on('submit', (e) => {
+  $('#operationForm').on('submit', (e) => {
     e.preventDefault();
     $.ajax({
       url: URI,
