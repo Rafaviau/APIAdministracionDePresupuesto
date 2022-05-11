@@ -23,3 +23,4 @@ app.listen(app.get('port'), () => {
 
 // routes
 app.use('/api/operations', require('../routes/routes'));
+app.use('/api/operations/NewForm', require('../routes/routes'));
